@@ -8,7 +8,7 @@ public class ArrayStack implements Stack{
 
 	public ArrayStack() {
 		top = 0;
-		arr = (Object[]) new Object[size];
+		arr = new Object[size];
 	}
 
 	public void push(Object item){
