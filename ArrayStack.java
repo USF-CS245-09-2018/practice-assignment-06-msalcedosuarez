@@ -11,29 +11,43 @@ public class ArrayStack implements Stack{
 		arr = (Object[]) new Object[size];
 	}
 
-	public ArrayStack(int capacity) {
-		top = 0;
-		arr = (Object[]) new Object[capacity];
-	}
-
 	public void push(Object item){
-
-		arr[++top] = item;
+		if(top == arr.length) {
+			resize(2*arr.length);
+		}
+		arr[top++] = item;
 	}
 
 	public Object pop(){
-		if(!empty()) {
-			return top--;
+		if(empty()) {
+			throw new EmptyStackException();
 		}
-		throw new EmptyStackException();
+		Object newarr = arr[top-1];
+		arr[top-1] = null;
+		top--;
+		if(top > 0 && top == arr.length/4) {
+			resize(arr.length/2);
+		}
+		return newarr;
 	}
 
 	public Object peek(){
-		if(!empty()) {
-			return arr[top];
+		if(empty()) {
+			throw new EmptyStackException();
 		}
+		return arr[top-1];
+	}
 
-		throw new EmptyStackException();
+	public void resize(int length) {
+		Object[] newarr = new Object[length];
+		for(int i = 0; i < top; i++) {
+			newarr[i] = arr[i];
+		}
+		arr = newarr; 
+	}
+
+	public int size() {
+		return top;
 	}
 
 	public boolean empty(){

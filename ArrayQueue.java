@@ -1,4 +1,4 @@
-
+import java.util.NoSuchElementException;
 import java.lang.Object;
 
 public class ArrayQueue implements Queue {
@@ -7,43 +7,75 @@ public class ArrayQueue implements Queue {
 	private int head;
 	private int tail;
 	private Object[] arr;
-
+	private int numSize;
 
 	public ArrayQueue() {
 		tail = 0;
 		head = 0;
-		arr = (Object[]) new Object[size];
-	}
-
-	public ArrayQueue(int capacity) {
-		tail = 0;
-		head = 0;
-		arr = (Object[]) new Object[capacity];
+		numSize = 0;
+		arr = new Object[size];
 	}
 
 	public Object dequeue() {
-		//Assert.not_false(head == tail);
-		return arr[head++];
+		if(empty()) {
+			throw new NoSuchElementException("Queue is Empty");
+		}
+		Object obj = arr[head];
+		arr[head] = null;
+		numSize--;
+		if(head == arr.length) {
+			head = 0;
+		}
+		else {
+			head++;
+		}
+		if(numSize == arr.length/4) {
+			grow_array(arr.length/2);
+			head = 0;
+			tail = numSize -1;
+		}
+		return obj;
 	}
 
 	public void enqueue(Object item) {
-		//try{
-			//Assert.not_false(tail + 1 != head);
-		//}
-		//catch(Exception e){
-			grow_array();
-		//}
+		if(numSize == arr.length) {
+			grow_array(2*arr.length);
+			head = 0;
+			tail = numSize -1;
+		}
+		if(empty()) {
+			head = tail = 0;
+		}
+		else if(tail == arr.length -1) {
+			tail = 0;
+		}
+		else {
+			tail++;
+		}
+		arr[tail] = item;
+		numSize++;
 	}
 
-	public void grow_array() {
-		Object[] newarr = new Object[arr.length*2];
-		for(int i = 0; i < arr.length; i++) {
-			newarr[i] = arr[i];
+	public void grow_array(int length) {
+		Object[] newarr = new Object[length];
+		int current = head;
+		for(int i = 0; i < numSize; i++) {
+			newarr[i] = arr[current];
+			if(current == arr.length-1) {
+				current = 0;
+			}
+			else {
+				current++;
+			}
 		}
 		arr = newarr;
 	}
 
 	public boolean empty() {
-		return tail == 0;
+		return numSize == 0;
+	}
+
+	public int size(){
+		return numSize;
 	}
 }
