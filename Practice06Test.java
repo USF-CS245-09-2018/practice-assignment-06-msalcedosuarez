@@ -25,12 +25,11 @@ public class Practice06Test {
 	
 	
 	public boolean isPalindrome(String item) {
-		System.out.println(item);
+
 		clearData();
 		for (int i = 0; i < item.length(); i++) {
-			stack.push(item.substring(i, i+1).toLowerCase());
-
-			queue.enqueue(item.substring(i, i+1).toLowerCase());
+			stack.push(item.substring(i, i+1).toLowerCase().replaceAll("[\\W]", ""));
+			queue.enqueue(item.substring(i, i+1).toLowerCase().replaceAll("[\\W]", ""));
 		}
 
 		while (! stack.empty() && ! queue.empty()) {
